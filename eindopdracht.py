@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
+import os
+
 def menu():
-    print("So, this place is called a 'menu' and this is where you choose what you want to do!\nThe things you can do are:\n Test whether a number is prime [t];\n Continuously list primes until you press q or esc [c];\n List primes in a certain range [l];\n Load previously generated primes from file [f]\n\n And, if you REALLY want to, you can also quit [q].\n")
+    print("So, this place is called a 'menu' and this is where you choose what you want to do!\nThe things you can do are:\n Test whether a number is prime [t];\n Continuously list primes until you press Ctrl+C [c];\n List primes in a certain range [l];\n Load previously generated primes from file [f]\n\n And, if you REALLY want to, you can also quit [q].\n")
     wotIWantToDo = input(" What do you want to do? [t/c/l/f/Q] ")
     return wotIWantToDo
 
@@ -39,6 +41,7 @@ def primeChecker(intPotPrime):
             else:
                 i += 1
     return isPrime
+
 def infPrimeLister():
     keepGoing = True
     listPrimes = [2]
@@ -59,8 +62,18 @@ def infPrimeLister():
                 print(intPotPrime)
             intPotPrime += 1
     except:
-        wantToSave = input("\nDo you want to save these primes to a file for future convenience? [Y/n] ")
-        print("\nUnder construction\n")
+        wantToSave = input("\nDo you want to save these primes to a file for future convenience? NOTE: this is your only chance! [Y/n] ")
+        if wantToSave == "y" or wantToSave == "":
+            print("\nSaving to file...")
+            if os.path.exists("primes"):
+              os.remove("primes")
+            filePrimes = open("primes", "at")
+            for i in listPrimes:
+                filePrimes.write(str(i) + "\n")
+            filePrimes.close()
+            print("Saved to file!\n")
+        else:
+            print("\nNot saved to file.\n")
 
 def rangePrimeLister(intStart, intEnd):
     listPrimes = [2]
@@ -81,8 +94,18 @@ def rangePrimeLister(intStart, intEnd):
         startPrint += 1
     for i in range(startPrint, len(listPrimes)):
         print(listPrimes[i])
-    wantToSave = input("\nDo you want to save these primes to a file for future convenience? [Y/n] ")
-    print("\nUnder construction\n")
+    wantToSave = input("\nDo you want to save these primes to a file for future convenience? NOTE: this is your only chance! [Y/n] ")
+    if wantToSave == "y" or wantToSave == "":
+        print("\nSaving to file...")
+        if os.path.exists("primes"):
+          os.remove("primes")
+        filePrimes = open("primes", "at")
+        for i in listPrimes:
+            filePrimes.write(str(i) + "\n")
+        filePrimes.close()
+        print("Saved to file!\n")
+    else:
+        print("\nNot saved to file.\n")
 
 def loadFromFile():
     print("\nUnder construction\n")
