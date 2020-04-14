@@ -20,7 +20,7 @@ def main():
         elif wotIWantToDo == "l":
             rangePrimeLister(int(input("\nAt what point would you like the listed primes to start? ")), int(input("And at what point would you like them to end? ")))
         elif wotIWantToDo == "f":
-            loadFromFile
+            loadFromFile()
         elif wotIWantToDo == "q" or wotIWantToDo == "":
             print("\nBye bye!")
             keepGoing = False
@@ -41,24 +41,26 @@ def primeChecker(intPotPrime):
     return isPrime
 def infPrimeLister():
     keepGoing = True
-    listPrimes = []
-    intPotPrime = 2
-    while keepGoing:
-        isPrime = True
-        intIndex = 0
-        i = listPrimes[intIndex]
-        while isPrime and i <= intPotPrime / 2:
-            if intPotPrime % i == 0:
-                isPrime = False
-            else:
-                intIndex += 1
-                i = listPrimes[intIndex]
-        if isPrime:
-            listPrimes.append(intPotPrime)
-            print(intPotPrime)
-        intPotPrime += 1
-    wantToSave = input("\nDo you want to save these primes to a file for future convenience? [Y/n] ")
-    print("\nUnder construction\n")
+    listPrimes = [2]
+    intPotPrime = 3
+    try:
+        while keepGoing:
+            isPrime = True
+            intIndex = 0
+            i = listPrimes[intIndex]
+            while isPrime and i <= intPotPrime / 2:
+                if intPotPrime % i == 0:
+                    isPrime = False
+                else:
+                    intIndex += 1
+                    i = listPrimes[intIndex]
+            if isPrime:
+                listPrimes.append(intPotPrime)
+                print(intPotPrime)
+            intPotPrime += 1
+    except:
+        wantToSave = input("\nDo you want to save these primes to a file for future convenience? [Y/n] ")
+        print("\nUnder construction\n")
 
 def rangePrimeLister(intStart, intEnd):
     listPrimes = [2]
@@ -82,7 +84,7 @@ def rangePrimeLister(intStart, intEnd):
     wantToSave = input("\nDo you want to save these primes to a file for future convenience? [Y/n] ")
     print("\nUnder construction\n")
 
-def loadFromFile:
+def loadFromFile():
     print("\nUnder construction\n")
 
 main()
