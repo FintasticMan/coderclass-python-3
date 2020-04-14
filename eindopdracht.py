@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import json
 
 def menu():
     print("So, this place is called a 'menu' and this is where you choose what you want to do!\nThe things you can do are:\n Test whether a number is prime [t];\n Continuously list primes until you press Ctrl+C [c];\n List primes in a certain range [l];\n Load previously generated primes from file [f]\n\n And, if you REALLY want to, you can also quit [q].\n")
@@ -65,13 +66,22 @@ def infPrimeLister():
         wantToSave = input("\nDo you want to save these primes to a file for future convenience? NOTE: this is your only chance! [Y/n] ")
         if wantToSave == "y" or wantToSave == "":
             print("\nSaving to file...")
+            jsonPrimes = json.dumps(listPrimes, indent=4)
             if os.path.exists("primes"):
-              os.remove("primes")
-            filePrimes = open("primes", "at")
-            for i in listPrimes:
-                filePrimes.write(str(i) + "\n")
-            filePrimes.close()
-            print("Saved to file!\n")
+                filePrimes = open("primes", "rt")
+                if len(jsonPrimes) > len(filePrimes.read()):
+                    filePrimes.close()
+                    filePrimes = open("primes", "wt")
+                    filePrimes.write(jsonPrimes)
+                    filePrimes.close()
+                    print("Saved to file!\n")
+                else:
+                    print("Not saved to file; more primes already in file.\n")
+            else:
+                filePrimes = open("primes", "wt")
+                filePrimes.write(jsonPrimes)
+                filePrimes.close()
+                print("Saved to file!\n")
         else:
             print("\nNot saved to file.\n")
 
@@ -97,13 +107,22 @@ def rangePrimeLister(intStart, intEnd):
     wantToSave = input("\nDo you want to save these primes to a file for future convenience? NOTE: this is your only chance! [Y/n] ")
     if wantToSave == "y" or wantToSave == "":
         print("\nSaving to file...")
+        jsonPrimes = json.dumps(listPrimes, indent=4)
         if os.path.exists("primes"):
-          os.remove("primes")
-        filePrimes = open("primes", "at")
-        for i in listPrimes:
-            filePrimes.write(str(i) + "\n")
-        filePrimes.close()
-        print("Saved to file!\n")
+            filePrimes = open("primes", "rt")
+            if len(jsonPrimes) > len(filePrimes.read()):
+                filePrimes.close()
+                filePrimes = open("primes", "wt")
+                filePrimes.write(jsonPrimes)
+                filePrimes.close()
+                print("Saved to file!\n")
+            else:
+                print("Not saved to file; more primes already in file.\n")
+        else:
+            filePrimes = open("primes", "wt")
+            filePrimes.write(jsonPrimes)
+            filePrimes.close()
+            print("Saved to file!\n")
     else:
         print("\nNot saved to file.\n")
 
