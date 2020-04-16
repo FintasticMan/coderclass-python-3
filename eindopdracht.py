@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 
+# import the necessary modules
 import os
 import json
 
-def menu():
-    print("So, this place is called a 'menu' and this is where you choose what you want to do!\nThe things you can do are:\n Test whether a number is prime [t];\n Continuously list primes until you press Ctrl+C [c];\n List primes in a certain range [l];\n Load previously generated primes from file [f]\n\n And, if you REALLY want to, you can also quit [q].\n")
-    wotIWantToDo = input(" What do you want to do? [t/c/l/f/Q] ")
-    return wotIWantToDo
-
+# call the different functions depending on the user's choice
 def main():
+    global listPrimes
+    listPrimes = [2]
     keepGoing = True
     print("Welcome to the Prime Mansion! Here you can do a bunch of things with primes! (If you haven't picked it up already, I like prime numbers)\n")
-    while keepGoing:
+    while keepGoing: # when one function is finished, go back to the menu
         wotIWantToDo = menu()
         if wotIWantToDo == "t":
             if primeChecker(int(input("\nWhich positive integer would you like to test? "))):
@@ -20,9 +19,11 @@ def main():
                 print("\nNope, not a prime. Sorry.\n")
         elif wotIWantToDo == "c":
             infPrimeLister()
-        elif wotIWantToDo == "l":
+        elif wotIWantToDo == "r":
             rangePrimeLister(int(input("\nAt what point would you like the listed primes to start? ")), int(input("And at what point would you like them to end? ")))
-        elif wotIWantToDo == "f":
+        elif wotIWantToDo == "s":
+            saveToFile()
+        elif wotIWantToDo == "l":
             loadFromFile()
         elif wotIWantToDo == "q" or wotIWantToDo == "":
             print("\nBye bye!")
@@ -30,24 +31,40 @@ def main():
         else:
             print("\nI think you messed up and typed something in wrong. Do better next time!\n")
 
+# print the menu and return user's decision
+def menu():
+    print("""So, this place is called a 'menu' and this is where you choose what you want to do!
+The things you can do are:
+ Test whether a number is prime [t];
+ Continuously list primes until you press Ctrl+C [c];
+ List primes in a certain range [r];
+ Save generated primes to file [s];
+ Load previously generated primes from file [l];
+
+ And, if you REALLY want to, you can also quit [q].\n""")
+    wotIWantToDo = input(" What do you want to do? [t/c/r/s/l/Q] ")
+    return wotIWantToDo
+
 def primeChecker(intPotPrime):
-    isPrime = True
+    isPrime = True # assume true unless proven otherwise
     i = 2
     if intPotPrime == 1:
-        isPrime = False
+        isPrime = False # one is not a prime even though it is only divisible by itself and 1
     else:
         while isPrime and i <= intPotPrime / 2:
-            if intPotPrime % i == 0:
+            if intPotPrime % i == 0: # checks if it's divisible by i
                 isPrime = False
             else:
                 i += 1
     return isPrime
 
 def infPrimeLister():
+    global listPrimes
     keepGoing = True
-    listPrimes = [2]
-    intPotPrime = 3
+    intPotPrime = listPrimes[-1] + 1
     try:
+        for i in listPrimes:
+            print(i)
         while keepGoing:
             isPrime = True
             intIndex = 0
@@ -63,31 +80,11 @@ def infPrimeLister():
                 print(intPotPrime)
             intPotPrime += 1
     except:
-        wantToSave = input("\nDo you want to save these primes to a file for future convenience? NOTE: this is your only chance! [Y/n] ")
-        if wantToSave == "y" or wantToSave == "":
-            print("\nSaving to file...")
-            jsonPrimes = json.dumps(listPrimes, indent=4)
-            if os.path.exists("primes"):
-                filePrimes = open("primes", "rt")
-                if len(jsonPrimes) > len(filePrimes.read()):
-                    filePrimes.close()
-                    filePrimes = open("primes", "wt")
-                    filePrimes.write(jsonPrimes)
-                    filePrimes.close()
-                    print("Saved to file!\n")
-                else:
-                    print("Not saved to file; more primes already in file.\n")
-            else:
-                filePrimes = open("primes", "wt")
-                filePrimes.write(jsonPrimes)
-                filePrimes.close()
-                print("Saved to file!\n")
-        else:
-            print("\nNot saved to file.\n")
+        print("\n")
 
 def rangePrimeLister(intStart, intEnd):
-    listPrimes = [2]
-    for intPotPrime in range(3, intEnd + 1):
+    global listPrimes
+    for intPotPrime in range(listPrimes[-1] + 1, intEnd + 1):
         isPrime = True
         intIndex = 0
         i = listPrimes[intIndex]
@@ -99,34 +96,39 @@ def rangePrimeLister(intStart, intEnd):
                 i = listPrimes[intIndex]
         if isPrime:
             listPrimes.append(intPotPrime)
-    startPrint = 0
-    while listPrimes[startPrint] < intStart:
-        startPrint += 1
-    for i in range(startPrint, len(listPrimes)):
-        print(listPrimes[i])
-    wantToSave = input("\nDo you want to save these primes to a file for future convenience? NOTE: this is your only chance! [Y/n] ")
-    if wantToSave == "y" or wantToSave == "":
-        print("\nSaving to file...")
-        jsonPrimes = json.dumps(listPrimes, indent=4)
-        if os.path.exists("primes"):
-            filePrimes = open("primes", "rt")
-            if len(jsonPrimes) > len(filePrimes.read()):
-                filePrimes.close()
-                filePrimes = open("primes", "wt")
-                filePrimes.write(jsonPrimes)
-                filePrimes.close()
-                print("Saved to file!\n")
-            else:
-                print("Not saved to file; more primes already in file.\n")
-        else:
+    for i in listPrimes:
+        if intStart < i < intEnd:
+            print(i)
+
+def saveToFile():
+    print("\nSaving to file...")
+    jsonPrimes = json.dumps(listPrimes, indent=4)
+    if os.path.exists("primes"):
+        filePrimes = open("primes", "rt")
+        if len(jsonPrimes) > len(filePrimes.read()):
+            filePrimes.close()
             filePrimes = open("primes", "wt")
             filePrimes.write(jsonPrimes)
-            filePrimes.close()
             print("Saved to file!\n")
+        else:
+            print("Not saved to file; more primes already in file.\n")
+        filePrimes.close()
     else:
-        print("\nNot saved to file.\n")
+        filePrimes = open("primes", "wt")
+        filePrimes.write(jsonPrimes)
+        filePrimes.close()
+        print("Saved to file!\n")
 
 def loadFromFile():
-    print("\nUnder construction\n")
+    global listPrimes
+    print("\nLoading from file...")
+    filePrimes = open("primes", "rt")
+    jsonPrimes = json.loads(filePrimes.read())
+    if len(listPrimes) < len(jsonPrimes):
+        listPrimes = jsonPrimes
+        print("Loaded from file!\n")
+    else:
+        print("Not loaded from file; more primes already loaded.\n")
+    filePrimes.close()
 
 main()
