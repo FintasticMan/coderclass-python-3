@@ -3,11 +3,14 @@
 # import the necessary modules
 import os
 import json
+import time
 
 # call the different functions depending on the user's choice
 def main():
     global listPrimes
+    global dicPrimes
     listPrimes = [2]
+    dicPrimes = {}
     keepGoing = True
     print("Welcome to the Prime Mansion! Here you can do a bunch of things with primes! (If you haven't picked it up already, I like prime numbers)\n")
     while keepGoing: # when one function is finished, go back to the menu
@@ -60,12 +63,15 @@ def primeChecker(intPotPrime):
 
 def infPrimeLister():
     global listPrimes
+    global dicPrimes
     keepGoing = True
     intPotPrime = listPrimes[-1] + 1
     try:
+        startTime = time.time()
         for i in listPrimes:
             print(i)
         while keepGoing:
+            thisPrimeTime = time.time()
             isPrime = True
             intIndex = 0
             i = listPrimes[intIndex]
@@ -77,6 +83,7 @@ def infPrimeLister():
                     i = listPrimes[intIndex]
             if isPrime:
                 listPrimes.append(intPotPrime)
+                dicPrimes[intPotPrime] = [len(dicPrimes) + 1, time.time() - thisPrimeTime, time.time() - startTime]
                 print(intPotPrime)
             intPotPrime += 1
     except:
@@ -84,7 +91,10 @@ def infPrimeLister():
 
 def rangePrimeLister(intStart, intEnd):
     global listPrimes
+    global dicPrimes
+    startTime = time.time()
     for intPotPrime in range(listPrimes[-1] + 1, intEnd + 1):
+        thisPrimeTime = time.time()
         isPrime = True
         intIndex = 0
         i = listPrimes[intIndex]
@@ -96,39 +106,65 @@ def rangePrimeLister(intStart, intEnd):
                 i = listPrimes[intIndex]
         if isPrime:
             listPrimes.append(intPotPrime)
+            dicPrimes[intPotPrime] = [len(dicPrimes) + 1, time.time() - thisPrimeTime, time.time() - startTime]
     for i in listPrimes:
         if intStart < i < intEnd:
             print(i)
 
 def saveToFile():
     print("\nSaving to file...")
-    jsonPrimes = json.dumps(listPrimes, indent=4)
+    jsonListPrimes = json.dumps(listPrimes, indent=4)
+    jsonDicPrimes = json.dumps(dicPrimes, indent=4)
     if os.path.exists("primes"):
-        filePrimes = open("primes", "rt")
-        if len(jsonPrimes) > len(filePrimes.read()):
-            filePrimes.close()
-            filePrimes = open("primes", "wt")
-            filePrimes.write(jsonPrimes)
+        fileListPrimes = open("primes", "rt")
+        if len(jsonListPrimes) > len(fileListPrimes.read()):
+            fileListPrimes.close()
+            fileListPrimes = open("primes", "wt")
+            fileListPrimes.write(jsonListPrimes)
             print("Saved to file!\n")
         else:
             print("Not saved to file; more primes already in file.\n")
-        filePrimes.close()
+        fileListPrimes.close()
     else:
-        filePrimes = open("primes", "wt")
-        filePrimes.write(jsonPrimes)
-        filePrimes.close()
+        fileListPrimes = open("primes", "wt")
+        fileListPrimes.write(jsonListPrimes)
+        fileListPrimes.close()
+        print("Saved to file!\n")
+    if os.path.exists("primesData"):
+        fileDicPrimes = open("primesData", "rt")
+        if len(jsonDicPrimes) > len(fileDicPrimes.read()):
+            fileDicPrimes.close()
+            fileDicPrimes = open("primesData", "wt")
+            fileDicPrimes.write(jsonDicPrimes)
+            print("Saved to file!\n")
+        else:
+            print("Not saved to file; more primes already in file.\n")
+        fileDicPrimes.close()
+    else:
+        fileDicPrimes = open("primesData", "wt")
+        fileDicPrimes.write(jsonDicPrimes)
+        fileDicPrimes.close()
         print("Saved to file!\n")
 
 def loadFromFile():
     global listPrimes
+    global dicPrimes
     print("\nLoading from file...")
-    filePrimes = open("primes", "rt")
-    jsonPrimes = json.loads(filePrimes.read())
-    if len(listPrimes) < len(jsonPrimes):
-        listPrimes = jsonPrimes
+    fileListPrimes = open("primes", "rt")
+    jsonListPrimes = json.loads(fileListPrimes.read())
+    fileDicPrimes = open("primesData", "rt")
+    jsonDicPrimes = json.loads(fileDicPrimes.read())
+    if len(listPrimes) < len(jsonListPrimes):
+        listPrimes = jsonListPrimes
         print("Loaded from file!\n")
     else:
         print("Not loaded from file; more primes already loaded.\n")
-    filePrimes.close()
+    if len(dicPrimes) < len(jsonDicPrimes):
+        dicPrimes = jsonDicPrimes
+        print("Loaded from file!\n")
+    else:
+        print("Not loaded from file; more primes already loaded.\n")
+    fileListPrimes.close()
+    fileDicPrimes.close()
 
 main()
