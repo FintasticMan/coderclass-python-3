@@ -16,10 +16,12 @@ def main():
     while keepGoing: # when one function is finished, go back to the menu
         wotIWantToDo = menu()
         if wotIWantToDo == "t":
-            if primeChecker(int(input("\nWhich positive integer would you like to test? "))):
-                print("\nThat IS a prime!\n")
+            intPotPrime = int(input("\nWhich positive integer would you like to test? "))
+            listIsPrime = primeChecker(intPotPrime)
+            if listIsPrime[0]:
+                print("\n" + str(intPotPrime) + " IS a prime!\n")
             else:
-                print("\nNope, not a prime. Sorry.\n")
+                print("\nNope, not a prime. It's divisible by " + str(listIsPrime[1]) + ". Sorry.\n")
         elif wotIWantToDo == "c":
             infPrimeLister()
         elif wotIWantToDo == "r":
@@ -59,7 +61,7 @@ def primeChecker(intPotPrime):
                 isPrime = False
             else:
                 i += 1
-    return isPrime
+    return [isPrime, i]
 
 def infPrimeLister():
     global listPrimes
