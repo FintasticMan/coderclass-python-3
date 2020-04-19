@@ -15,22 +15,22 @@ def main():
     print("Welcome to the Prime Mansion! Here you can do a bunch of things with primes! (If you haven't picked it up already, I like prime numbers)\n")
     while keepGoing: # when one function is finished, go back to the menu
         wotIWantToDo = menu()
-        if wotIWantToDo == "t":
+        if wotIWantToDo == "t" or wotIWantToDo == "T":
             intPotPrime = int(input("\nWhich positive integer would you like to test? "))
             listIsPrime = primeChecker(intPotPrime)
             if listIsPrime[0]:
                 print("\n" + str(intPotPrime) + " IS a prime!\n")
             else:
                 print("\nNope, not a prime. It's divisible by " + str(listIsPrime[1]) + ". Sorry.\n")
-        elif wotIWantToDo == "c":
+        elif wotIWantToDo == "c" or wotIWantToDo == "C":
             infPrimeLister()
-        elif wotIWantToDo == "r":
+        elif wotIWantToDo == "r" or wotIWantToDo == "R":
             rangePrimeLister(int(input("\nAt what point would you like the listed primes to start? ")), int(input("And at what point would you like them to end? ")))
-        elif wotIWantToDo == "s":
+        elif wotIWantToDo == "s" or wotIWantToDo == "S":
             saveToFile()
-        elif wotIWantToDo == "l":
+        elif wotIWantToDo == "l" or wotIWantToDo == "L":
             loadFromFile()
-        elif wotIWantToDo == "q" or wotIWantToDo == "":
+        elif wotIWantToDo == "q" or wotIWantToDo == "Q" or wotIWantToDo == "":
             print("\nBye bye!")
             keepGoing = False
         else:
